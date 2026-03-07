@@ -1,3 +1,7 @@
+{{-- الفورم الى برفع منها الصوره الى هيتم عليها التشخيص --}}
+
+
+
 <form action="{{ route('prediction.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
