@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
     protected $fillable = [
         'doctor_id',
         'name',
