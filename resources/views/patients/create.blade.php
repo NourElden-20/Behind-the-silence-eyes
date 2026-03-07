@@ -1,3 +1,7 @@
+{{-- الفورم الى بعمل منها انشاء مريض  --}}
+
+
+
 <form action="{{ route('patient.store') }}" method="POST">
     @csrf
 

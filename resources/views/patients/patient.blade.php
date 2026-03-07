@@ -1,3 +1,7 @@
+
+{{-- بتعرض كل المرضى الى عندى  --}}
+
+
 @foreach ($allPatients as $patient )
 <h1>{{$patient->name}}</h1>
     <h1>{{$patient->national_id}}</h1>

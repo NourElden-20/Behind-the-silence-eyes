@@ -1,3 +1,7 @@
+{{-- الفورم الى بعمل منها تعديل مريض  --}}
+
+
+
 <form action="{{ route('patient.update',$patient->id) }}" method="POST">
     @csrf
 
