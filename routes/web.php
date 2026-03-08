@@ -38,4 +38,10 @@ Route::prefix('/patient')->group(function () {
 Route::prefix('/prediction')->group(function () {
     Route::get('/create/{id}', [PredectionController::class, 'create'])->name('prediction.create');
     Route::post('/store', [PredectionController::class, 'store'])->name('prediction.store');
+     
+});
+
+Route::prefix('/reports')->group(function(){
+    Route::get('/{id}', [ReportController::class, 'show'])->name('reports.show');
+    Route::post('/{id}/generate', [ReportController::class, 'generate'])->name('reports.generate');
 });
