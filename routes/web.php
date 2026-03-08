@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Web;
-
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,10 +37,15 @@ Route::prefix('/patient')->group(function () {
 Route::prefix('/prediction')->group(function () {
     Route::get('/create/{id}', [PredectionController::class, 'create'])->name('prediction.create');
     Route::post('/store', [PredectionController::class, 'store'])->name('prediction.store');
-     
 });
 
-Route::prefix('/reports')->group(function(){
-    Route::get('/{id}', [ReportController::class, 'show'])->name('reports.show');
-    Route::post('/{id}/generate', [ReportController::class, 'generate'])->name('reports.generate');
+Route::prefix('/doctors')->group(function () {
+    Route::get('/create', [DoctorController::class, 'create'])->name('doctors.create');
+    Route::post('/store', [DoctorController::class, 'store'])->name('doctors.store');
+    Route::get('/index', [DoctorController::class, 'index'])->name('doctors.index');
+    Route::get('/show/{id}', [DoctorController::class, 'show'])->name('doctors.show');
+    Route::get('/edit/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
+    Route::post('/update/{id}', [DoctorController::class, 'update'])->name('doctors.update');
+    Route::delete('/delete/{id}', [DoctorController::class, 'destroy'])->name('doctors.delete');
 });
+
