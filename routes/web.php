@@ -11,6 +11,10 @@ use App\Http\Controllers\Web\PredectionController;
 // ─────────────────────────────────────────
 // Guest Routes (مش محتاج يكون لوقن)
 // ─────────────────────────────────────────
+
+Route::get('/', function () {
+    return view('auth.login');
+});
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
