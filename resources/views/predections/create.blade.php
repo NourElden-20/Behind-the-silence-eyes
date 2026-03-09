@@ -2,7 +2,7 @@
 
 
 
-<form action="{{ route('prediction.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('predictions.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     <input type="hidden" name="patient_id" value="{{ $patient->id }}">

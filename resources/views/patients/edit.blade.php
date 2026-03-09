@@ -2,7 +2,7 @@
 
 
 
-<form action="{{ route('patient.update',$patient->id) }}" method="POST">
+<form action="{{ route('patients.update',$patient->id) }}" method="POST">
     @csrf
 
     <input type="text" name="name" placeholder="Name" value="{{ $patient->name }}">

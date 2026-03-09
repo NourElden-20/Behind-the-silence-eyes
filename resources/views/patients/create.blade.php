@@ -2,7 +2,7 @@
 
 
 
-<form action="{{ route('patient.store') }}" method="POST">
+<form action="{{ route('patients.store') }}" method="POST">
     @csrf
 
     <input type="text" name="name" placeholder="Name">
