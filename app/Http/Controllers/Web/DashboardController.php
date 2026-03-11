@@ -44,7 +44,7 @@ class DashboardController extends Controller
         return view('dashboard.doctor', compact(
             'totalPatient',
             'totalPrediction',
-            'predictions'
+            'predictions',
         ));
 
     }

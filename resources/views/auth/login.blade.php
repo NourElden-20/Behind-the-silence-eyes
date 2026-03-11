@@ -1,65 +1,85 @@
 @extends('layouts.auth')
 
 @section('content')
-<div class="row justify-content-center bg-light">
-    <div class="col-xl-6 col-lg-6 col-md-6">
-        <div class="text-center">
-        <h1 class="  mb-8">Behind the Silent Eyes</h1>
-        <h4 >AI-Powered Eye Disease Diagnosis System</h4>
+    <div class="min-vh-100 w-100 d-flex flex-column align-items-center justify-content-center px-3"
+        style="background:#e2eef9; position:fixed; top:0; left:0;">
+
+        <div class="rounded-circle d-flex align-items-center justify-content-center mb-3 shadow"
+            style="width:72px;height:72px; background:#1a56db;">
+            <svg width="34" height="34" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M1.5 12S5.25 4.5 12 4.5 22.5 12 22.5 12 18.75 19.5 12 19.5 1.5 12 1.5 12z" />
+                <circle cx="12" cy="12" r="3" />
+            </svg>
         </div>
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="p-5">
 
-                            <div class="">
-                                <h1 class="h4 text-dark mb-4">Doctor Login</h1>
-                            </div>
+        <h1 class="fw-bold mb-1" style="color:#0f172a;">Behind the Silent Eyes</h1>
+        <p class="mb-4" style="color:#475569;">AI-Powered Eye Disease Diagnosis System</p>
 
-                            @if(session('error'))
-                                <div class="alert alert-danger">{{ session('error') }}</div>
-                            @endif
+        <div class="card border-0 p-5 w-100"
+            style="max-width:540px; border-radius:20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 6px 20px rgba(26,86,219,0.1);">
+            <h2 class="fw-bold mb-4" style="color:#0f172a;">Doctor Login</h2>
 
-                            <form class="user" action="{{ route('login') }}" method="POST">
-                                @csrf
+            @if(session('error'))
+                <div class="alert alert-danger rounded-3">{{ session('error') }}</div>
+            @endif
 
-                                <div class="form-group">
-                                    <span class="text-dark">Email Address</span>
-                                    <input type="email" name="email"
-                                        class="form-control form-control-user @error('email') is-invalid @enderror"
-                                        placeholder="&#xf0e0; Docotr@hospital.com"
-                                        value="{{ old('email') }}">
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+            <form action="{{ route('login') }}" method="POST">
+                @csrf
 
-                                <div class="form-group">
-                                    <span class="text-dark">Password</span>
-                                    <input type="password" name="password"
-                                        class="form-control form-control-user @error('password') is-invalid @enderror"
-                                        placeholder="&#xf070;Enter Your Password">
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="p-6">
-                                    <input type="checkbox" name="remeber me" id=""> <span>remeber me</span>
-                                    <a href="">Forgot Password</a>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary btn-user btn-block">
-                                    Login
-                                </button>
-
-                            </form>
-
-                        </div>
+                {{-- Email --}}
+                <div class="mb-4">
+                    <label class="form-label fw-bold" style="color:#0f172a;">Email Address</label>
+                    <div class="input-group border overflow-hidden"
+                        style="border-color:#cbd5e1 !important; border-radius:12px;">
+                        <span class="input-group-text bg-white border-0 ps-3 pe-2">
+                            <i class="bi bi-envelope fs-5 text-secondary"></i>
+                        </span>
+                        <input type="email" name="email"
+                            class="form-control bg-white border-0 shadow-none ps-1 @error('email') is-invalid @enderror"
+                            placeholder="doctor@hospital.com" value="{{ old('email') }}">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-            </div>
+
+                {{-- Password --}}
+                <div class="mb-3">
+                    <label class="form-label fw-bold" style="color:#0f172a;">Password</label>
+                    <div class="input-group border overflow-hidden"
+                        style="border-color:#cbd5e1 !important; border-radius:12px;">
+                        <span class="input-group-text bg-white border-0 ps-3 pe-2">
+                            <i class="bi bi-lock fs-5 text-secondary"></i>
+                        </span>
+                        <input type="password" name="password" id="passwordInput"
+                            class="form-control bg-white border-0 shadow-none ps-1 @error('password') is-invalid @enderror"
+                            placeholder="Enter your password">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Remember / Forgot --}}
+                <div class="d-flex justify-content-between align-items-center my-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                        <label class="form-check-label text-secondary" for="remember">Remember me</label>
+                    </div>
+                    <a href="" class="text-decoration-none fw-semibold" style="color:#1a56db;">Forgot Password</a>
+                </div>
+
+                {{-- Submit --}}
+
+                <button type="submit" class="w-100 py-2 fw-bold fs-5 border-0 text-white mt-2"
+                    style="background:#1a56db; border-radius:12px;">Login</button>
+
+            </form>
         </div>
+
+        <footer class="text-center mt-4 pb-3" style="color:#475569;">
+            <small>&copy; 2026 Behind the Silent Eyes. All rights reserved.</small>
+        </footer>
+
     </div>
-</div>
 @endsection

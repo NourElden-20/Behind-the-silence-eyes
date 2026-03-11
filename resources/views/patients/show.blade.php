@@ -1,13 +1,11 @@
 {{-- بتعض اتفاصيل المريض --}}
+@extends('layouts.app')
+@section('main-content')
 
-@foreach($predictions as $prediction)
-    <h1>{{ $prediction->patient->name }}</h1>
-    <h1>{{ $prediction->disease_type }}</h1>
-    <h1>{{ $prediction->confidence }}</h1>
-    <form action="{{ route('reports.generate',$prediction->id) }}" method="POST">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <button type="submit">Generate Report</button>
-</form>
-@endforeach
+{{-- هتكتب الكود هنا ملكش دعوه ب اى حاجه تانيه  --}}
+<h1>هتعمل هنا الكود بتاع الصفحه الى بتعرض بيانات المريض الى بظهر لما بعمل view</h1>
 
+<a href="{{ route('patients.edit',$patient->id) }}">edit لنك يوديك للبيدج بتاع تعديل بيانات المريض علشان تشوف الى بتعمله</a>
+
+@endsection
 
