@@ -8,7 +8,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Total Patients</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$totalPatient}}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPatient }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -50,15 +50,10 @@
             </div>
         </div>
     </div>
+  
 
     <div class="row">
-
         <div class="col-xl-6 col-lg-7">
-
-            <!-- Area Chart -->
-
-
-            <!-- Bar Chart -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Monthly Diagnoses</h6>
@@ -69,16 +64,12 @@
                     </div>
                 </div>
             </div>
-
         </div>
-        <!-- Pie Chart -->
         <div class="col-xl-6 col-lg-5">
             <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Disease Distribution</h6>
                 </div>
-                <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
                         <canvas id="myPieChart"></canvas>
@@ -98,48 +89,71 @@
             </div>
         </div>
     </div>
-   <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Recent Diagnoses</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr class="text-center">
-                        <th>Patient</th>
-                        <th>Disease Type</th>
-                        <th>Severity</th>
-                        <th>Confidence</th>
-                        <th>DATE</th>
-                        <th>ACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- @forelse($predictions as $prediction) --}}
-                    <tr>
-                        {{-- <td>{{ $loop->iteration }}</td>
-                        <td>{{ $prediction->patient->name }}</td>
-                        <td>{{ ucfirst($prediction->disease_type) }}</td>
-                        <td>{{ $prediction->severity ?? '-' }}</td>
-                        <td>{{ $prediction->confidence }}%</td>
-                        <td>{{ $prediction->created_at->format('d M Y') }}</td> --}}
-                        <td>
-                            
-                        </td>
-                       
-                    </tr>
-                    {{-- @empty --}}
-                    <tr>
-                        <td colspan="7" class="text-center">No diagnoses yet</td>
-                    </tr>
-                    {{-- @endforelse --}}
-                </tbody>
-            </table>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Recent Diagnoses</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Patient</th>
+                            <th>Disease Type</th>
+                            <th>Severity</th>
+                            <th>Confidence</th>
+                            <th>DATE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- @forelse($predictions as $prediction) --}}
+                        <tr>
+                            {{-- <td>{{ $loop->iteration }}</td>
+                            <td>{{ $prediction->patient->name }}</td>
+                            <td>{{ ucfirst($prediction->disease_type) }}</td>
+                            <td>{{ $prediction->severity ?? '-' }}</td>
+                            <td>{{ $prediction->confidence }}%</td>
+                            <td>{{ $prediction->created_at->format('d M Y') }}</td> --}}
+                            <td></td>
+                        </tr>
+                        {{-- @empty --}}
+                        <tr>
+                            <td colspan="7" class="text-center">No diagnoses yet</td>
+                        </tr>
+                        {{-- @endforelse --}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    
 
-    
-</div>
+    {{-- Quick Actions --}}
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <a href="{{ route('patients.create') }}" class="btn p-4 w-100 text-start text-white"
+                style="background:#2563eb; border-radius:16px;">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
+                    class="d-block mb-3">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <strong class="fs-4 d-block mb-1">Add New Patient</strong>
+                <span class="fw-light fs-6">Register a new patient in the system</span>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="#" class="btn p-4 w-100 text-start text-white" style="background:#22c55e; border-radius:16px;">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
+                    class="d-block mb-3">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                <strong class="fs-4 d-block mb-1">Start Diagnosis</strong>
+                <span class="fw-light fs-6">Select a patient to begin AI diagnosis</span>
+            </a>
+        </div>
+    </div>
 @endsection
