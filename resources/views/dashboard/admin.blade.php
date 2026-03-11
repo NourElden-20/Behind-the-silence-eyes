@@ -131,8 +131,8 @@
 
     {{-- Quick Actions --}}
     <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <a href="{{ route('patients.create') }}" class="btn p-4 w-100 text-start text-white"
+        <div class="col-md-12">
+            <a href="{{ route('doctors.create') }}" class="btn p-4 w-100 text-start text-white"
                 style="background:#2563eb; border-radius:16px;">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
                     class="d-block mb-3">
@@ -141,19 +141,10 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
-                <strong class="fs-4 d-block mb-1">Add New Patient</strong>
-                <span class="fw-light fs-6">Register a new patient in the system</span>
+                <strong class="fs-4 d-block mb-1">Add New Doctor</strong>
+                <span class="fw-light fs-6">Register a new Doctor in the system</span>
             </a>
         </div>
-        <div class="col-md-6">
-            <a href="#" class="btn p-4 w-100 text-start text-white" style="background:#22c55e; border-radius:16px;">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
-                    class="d-block mb-3">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-                <strong class="fs-4 d-block mb-1">Start Diagnosis</strong>
-                <span class="fw-light fs-6">Select a patient to begin AI diagnosis</span>
-            </a>
-        </div>
+    
     </div>
 @endsection

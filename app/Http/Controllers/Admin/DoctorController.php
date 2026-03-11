@@ -11,12 +11,12 @@ class DoctorController extends Controller
     public function index()
     {
         $doctors = User::where('role','doctor')->latest()->paginate(10);
-        return view('doctors.index', compact('doctors'));
+        return view('admin.doctors.index', compact('doctors'));
     }
 
     public function create()
     {
-        return view('doctors.create');
+        return view('admin.doctors.create');
     }
 
      public function store(Request $request)

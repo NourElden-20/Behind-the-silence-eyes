@@ -33,3 +33,6 @@
         <env name="NIGHTWATCH_ENABLED" value="false"/>
     </php>
 </phpunit>
+<extensions>
+<bootstrap class="Clockwork\Support\Laravel\Tests\ClockworkExtension" />
+</extensions>
