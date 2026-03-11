@@ -8,8 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+@if (auth()->user()->isAdmin())
+    <title> @yield('title')Admin-Dashboard</title>
+    @else
+    <title> @yield('title')Doctor-Dashboard</title>
+@endif
 
-    <title> @yield('title')DoctorDashboard</title>
+    
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
