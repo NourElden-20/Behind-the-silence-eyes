@@ -10,7 +10,8 @@ class DoctorController extends Controller
 {
     public function index()
     {
-        $doctors = User::where('role','doctor')->latest()->paginate(10);
+        $doctors = User::where('role', 'doctor')->latest()->paginate(10);
+
         return view('admin.doctors.index', compact('doctors'));
     }
 
@@ -19,14 +20,14 @@ class DoctorController extends Controller
         return view('admin.doctors.create');
     }
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'doctor_code' => 'required|string|max:50',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'phone' => 'required'
+            'phone' => 'required',
         ]);
 
         User::create([
@@ -35,23 +36,26 @@ class DoctorController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'role' => 'doctor',
-            'phone' => $request->phone
+            'phone' => $request->phone,
         ]);
 
-        return redirect()->route('doctors.index')->with('success','Doctor created successfully');
+        return redirect()->route('doctors.index')->with('success', 'Doctor created successfully');
     }
-     public function show($id)
+
+    public function show($id)
     {
         $doctor = User::findOrFail($id);
 
-        return view('doctors.show', compact('doctor'));
+        return view('admin.doctors.show', compact('doctor'));
     }
-     public function edit($id)
+
+    public function edit($id)
     {
         $doctor = User::findOrFail($id);
 
-        return view('doctors.edit', compact('doctor'));
+        return view('admin.doctors.edit', compact('doctor'));
     }
+
     public function update(Request $request, $id)
     {
         $doctor = User::findOrFail($id);
@@ -61,20 +65,20 @@ class DoctorController extends Controller
         $doctor->email = $request->email;
         $doctor->phone = $request->phone;
 
-        if($request->password){
+        if ($request->password) {
             $doctor->password = bcrypt($request->password);
         }
 
         $doctor->save();
 
-        return redirect()->route('doctors.index')->with('success','Doctor updated successfully');
+        return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully');
     }
-     public function destroy($id)
+
+    public function destroy($id)
     {
         $doctor = User::findOrFail($id);
         $doctor->delete();
 
-        return redirect()->route('doctors.index')->with('success','Doctor deleted successfully');
+        return redirect()->route('doctors.index')->with('success', 'Doctor deleted successfully');
     }
-
 }
