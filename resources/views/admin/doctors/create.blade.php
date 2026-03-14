@@ -7,12 +7,17 @@
     <div class="flex-grow-1 ">
         <div class="mx-auto" style="max-width: 900px;">
 
-            {{-- Back to Patients --}}
+
+
+            {{-- Back to Doctor List --}}
+            {{-- هيروح ل صفحة ال Doc List --}}
             <a href="{{ route('patients.index') }}"
                 class="text-decoration-none text-secondary d-inline-flex align-items-center gap-1 mb-3"
                 style="font-size: 1rem;">
-                <i class="fas fa-fw  fa-arrow-left"></i> Back to Doctors
+                <i class="fas fa-fw  fa-arrow-left"></i> Back to Doctors List
             </a>
+
+
 
             <!-- Page Title -->
             <h5 class="fw-bold mb-1" style="color: #1a1a2e;">Add New Doctor</h5>
@@ -20,144 +25,94 @@
                 Fill in the Doctor information below
             </p>
 
-            <!-- Errors -->
 
 
             <!-- Card -->
             <div class="bg-white rounded border p-4">
 
-                {{-- Form for create patient --}}
-                <form action="{{ route('patients.store') }}" method="POST">
-                    @csrf
+                <!-- Personal Information Section -->
+                <p class="fw-bold mb-3 pb-2 border-bottom" style="font-size: 2rem; color: #020240;">
+                    Personal Information
+                </p>
 
-                    <!-- Personal Information Section -->
-                    <p class="fw-bold mb-3 pb-2 border-bottom" style="font-size: 2rem; color: #020240;">
-                        Personal Information
-                    </p>
 
-                    <!-- National ID -->
-                    <div class="mb-3">
+                <!-- Doctor ID -->
+                <div class="mb-3">
 
-                        <div class="form-label fw-medium">
-                            <label class="form-label" style="font-size: 0.85rem;">
-                                Doctor ID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="doctor_id" placeholder="Enter Doctor ID">
-                        </div>
-
+                    <div class="form-label fw-medium">
+                        <label class="form-label" style="font-size: 0.85rem;">
+                            Doctor Code <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="doc_code" placeholder="Enter Doctor Code">
                     </div>
-                    <!-- Full Name -->
-                    <div class="mb-3">
-                        <label class="form-label fw-medium" style="font-size: 0.85rem;">
-                            Full Name <span class="text-danger">*</span>
-                        </label>
+                </div>
+                @error('doc_code')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
 
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                            placeholder="Enter patient's full name" value="{{ old('name') }}">
 
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium" style="font-size: 0.85rem;">
+                        Full Name <span class="text-danger">*</span>
+                    </label>
 
-                    <!-- National ID & Date of Birth -->
-                    <div class="row g-3 mb-3">
+                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                        placeholder="Enter Doctor full name" value="{{ old('name') }}">
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium" style="font-size: 0.85rem;">
-                                National ID <span class="text-danger">*</span>
-                            </label>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
 
-                            <input type="text" name="national_id"
-                                class="form-control @error('national_id') is-invalid @enderror"
-                                placeholder="Enter national ID" value="{{ old('national_id') }}">
 
-                            @error('national_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium" style="font-size: 0.85rem;">
-                                Date of Birth <span class="text-danger">*</span>
-                            </label>
-
-                            <input type="date" name="date_of_birth"
-                                class="form-control @error('date_of_birth') is-invalid @enderror"
-                                value="{{ old('date_of_birth') }}">
-
-                            @error('date_of_birth')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                    </div>
-
-                    <!-- Age & Gender -->
-                    <div class="row g-3 mb-4">
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium" style="font-size: 0.85rem;">
-                                Age <span class="text-danger">*</span>
-                            </label>
-
-                            <input type="number" name="age" class="form-control @error('age') is-invalid @enderror"
-                                placeholder="Enter age" value="{{ old('age') }}">
-
-                            @error('age')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium" style="font-size: 0.85rem;">
-                                Gender <span class="text-danger">*</span>
-                            </label>
-
-                            <select name="gender" class="form-select @error('gender') is-invalid @enderror">
-
-                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>
-                                    Male
-                                </option>
-
-                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
-                                    Female
-                                </option>
-
-                            </select>
-
-                            @error('gender')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                    </div>
                     <!-- Phone Number -->
                     <div class="mb-3">
-
                         <div class="form-label fw-medium">
                             <label class="form-label" style="font-size: 0.85rem;">
                                 Phone Number <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" name="phone" placeholder="Enter Phone Number">
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
                     </div>
-                    <!-- Medical Information Section -->
-                    <p class="fw-semibold mb-3 pb-2 border-bottom" style="font-size: 0.95rem; color: #1a1a2e;">
-                        Medical Information
-                    </p>
 
-                    <!-- Medical History -->
-                    <div class="mb-4">
 
-                        <label class="form-label fw-medium" style="font-size: 0.85rem;">
-                            Medical History
-                        </label>
+                    <!-- Email-->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" placeholder="Enter email">
+                        </div>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                        <textarea name="medical_history" class="form-control @error('medical_history') is-invalid @enderror"
-                            rows="4"
-                            placeholder="Enter doctor's professional notes or specialization details">{{ old('medical_history') }}</textarea>
+                    <!-- Password & Role-->
+                    <div class="row mb-3">
 
-                        @error('medical_history')
+
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <label class="form-label">Password <span class="text-danger">*</span></label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter password">
+                        </div>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+
+
+                        <!-- Role -->
+                        <div class="col-md-6">
+                            <label class="form-label">Role <span class="text-danger">*</span></label>
+                            <select name="role" class="form-select">
+                                <option value="">Select Role</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        @error('role')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
 
@@ -172,17 +127,21 @@
                             Save Doctor
                         </button>
 
-                        {{-- Cancel return to home page --}}
-                        <a href="{{route('patients.index')}}" class="btn btn-outline-secondary "
+                        {{-- Cancel return to Dashboard --}}
+                        <a href="#" class="btn btn-outline-secondary "
                             style="font-size: 0.88rem;">
                             Cancel
                         </a>
-
                     </div>
 
-                </form>
 
+                        {{-- عايزين Validate ان لما يتداس ع زرار ال Save والفورم فاضيه يقولو لازم تملأ الفورم --}}
+
+
+
+                    </form>
+
+                </div>
             </div>
         </div>
-    </div>
 @endsection
