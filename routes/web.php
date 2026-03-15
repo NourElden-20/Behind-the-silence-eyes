@@ -20,6 +20,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
+// Forget Password Page 
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->name('password.request');
+
 // ─────────────────────────────────────────
 // Auth Routes (لازم يكون لوقن)
 // ─────────────────────────────────────────
