@@ -34,6 +34,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/profile', function () {
+        return view('auth.profile');
+    })->name('profile');
+
     // Patients
     Route::prefix('/patients')->group(function () {
         Route::get('/', [PatientController::class, 'index'])->name('patients.index');
