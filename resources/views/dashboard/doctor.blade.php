@@ -187,4 +187,11 @@
         </a>
     </div>
 </div>
+<script>
+    var chartLabels = {!! json_encode($chartLabels) !!};
+    var chartData   = {!! json_encode($chartData) !!};
+    var diabetesCount     = {{ $diabetesCount }};
+    var anemiaCount       = {{ $anemiaCount }};
+    var hypertensionCount = {{ $hypertensionCount }};
+</script>
 @endsection

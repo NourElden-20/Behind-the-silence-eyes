@@ -43,7 +43,7 @@
                         </label>
 
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                            placeholder="Enter patient's full name" value="{{ old('name') }}">
+                            placeholder="Enter patient's full name">
 
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -60,7 +60,7 @@
 
                             <input type="text" name="national_id"
                                 class="form-control @error('national_id') is-invalid @enderror"
-                                placeholder="Enter national ID" value="{{ old('national_id') }}">
+                                placeholder="Enter national ID">
 
                             @error('national_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -92,7 +92,7 @@
                             </label>
 
                             <input type="number" name="age" class="form-control @error('age') is-invalid @enderror"
-                                placeholder="Enter age" value="{{ old('age') }}">
+                                placeholder="Enter age">
 
                             @error('age')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -106,11 +106,11 @@
 
                             <select name="gender" class="form-select @error('gender') is-invalid @enderror">
 
-                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>
+                                <option value="male">
                                     Male
                                 </option>
 
-                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
+                                <option value="female">
                                     Female
                                 </option>
 

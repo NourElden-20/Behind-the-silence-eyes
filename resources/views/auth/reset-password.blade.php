@@ -16,15 +16,28 @@
         <p class="mb-4" style="color:#475569;">AI-Powered Eye Disease Diagnosis System</p>
 
         <div class="card border-0 p-5 w-100"
-            style="max-width:540px; border-radius:20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 6px 20px rgba(26,86,219,0.1);">
-            <h2 class="fw-bold mb-4" style="color:#0f172a;">Doctor Login</h2>
+            style="max-width:540px; border-radius:20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
 
+            <h2 class="fw-bold mb-2" style="color:#0f172a;">Reset Password</h2>
+            <p class="mb-4 text-secondary" style="font-size:0.95rem;">
+                Enter your new password below.
+            </p>
+
+            {{-- Success Message --}}
+            @if(session('success'))
+                <div class="alert alert-success rounded-3">{{ session('success') }}</div>
+            @endif
+
+            {{-- Error Message --}}
             @if(session('error'))
                 <div class="alert alert-danger rounded-3">{{ session('error') }}</div>
             @endif
 
-            <form action="{{ route('login') }}" method="POST">
+            <form action="{{ route('password.update') }}" method="POST">
                 @csrf
+
+                {{-- Token --}}
+                <input type="hidden" name="token" value="{{ $token }}">
 
                 {{-- Email --}}
                 <div class="mb-4">
@@ -36,43 +49,58 @@
                         </span>
                         <input type="email" name="email"
                             class="form-control bg-white border-0 shadow-none ps-1 @error('email') is-invalid @enderror"
-                            placeholder="doctor@hospital.com" value="{{ old('email') }}">
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                            placeholder="doctor@hospital.com"
+                            value="{{ old('email', request('email')) }}">
                     </div>
+                    @error('email')
+                        <div class="text-danger mt-1" style="font-size:0.85rem;">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                {{-- Password --}}
-                <div class="mb-3">
-                    <label class="form-label fw-bold" style="color:#0f172a;">Password</label>
+                {{-- New Password --}}
+                <div class="mb-4">
+                    <label class="form-label fw-bold" style="color:#0f172a;">New Password</label>
                     <div class="input-group border overflow-hidden"
                         style="border-color:#cbd5e1 !important; border-radius:12px;">
                         <span class="input-group-text bg-white border-0 ps-3 pe-2">
                             <i class="bi bi-lock fs-5 text-secondary"></i>
                         </span>
-                        <input type="password" name="password" id="passwordInput"
+                        <input type="password" name="password"
                             class="form-control bg-white border-0 shadow-none ps-1 @error('password') is-invalid @enderror"
-                            placeholder="Enter your password">
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                            placeholder="Enter new password">
                     </div>
+                    @error('password')
+                        <div class="text-danger mt-1" style="font-size:0.85rem;">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                {{-- Remember / Forgot --}}
-                <div class="d-flex justify-content-between align-items-center my-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                        <label class="form-check-label text-secondary" for="remember">Remember me</label>
+                {{-- Confirm Password --}}
+                <div class="mb-4">
+                    <label class="form-label fw-bold" style="color:#0f172a;">Confirm Password</label>
+                    <div class="input-group border overflow-hidden"
+                        style="border-color:#cbd5e1 !important; border-radius:12px;">
+                        <span class="input-group-text bg-white border-0 ps-3 pe-2">
+                            <i class="bi bi-lock-fill fs-5 text-secondary"></i>
+                        </span>
+                        <input type="password" name="password_confirmation"
+                            class="form-control bg-white border-0 shadow-none ps-1"
+                            placeholder="Confirm new password">
                     </div>
-                    <a href="{{ route('password.request') }}" class="text-decoration-none fw-semibold" style="color:#1a56db;">Forgot Password</a>
                 </div>
 
                 {{-- Submit --}}
-
                 <button type="submit" class="w-100 py-2 fw-bold fs-5 border-0 text-white mt-2"
-                    style="background:#1a56db; border-radius:12px;">Login</button>
+                    style="background:#1a56db; border-radius:12px;">
+                    Reset Password
+                </button>
+
+                {{-- Back to Login --}}
+                <div class="text-center mt-3">
+                    <a href="{{ route('login') }}" class="text-decoration-none"
+                        style="color:#1a56db; font-size:0.9rem;">
+                        Back to Login
+                    </a>
+                </div>
 
             </form>
         </div>
