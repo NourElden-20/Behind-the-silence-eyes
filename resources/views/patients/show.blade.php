@@ -103,7 +103,7 @@
                         <td>{{ $prediction->confidence }}%</td>
                         <td>{{ \Illuminate\Support\Str::limit($prediction->notes, 40) }}</td>
                         <td>
-                            <a href="{{ route('predictions.report', $prediction->id) }}"
+                            <a href="{{ route('reports.show', $prediction->id) }}"
                                 class="text-primary font-weight-bold">
                                 <i class="fas fa-file-alt mr-1"></i> Report
                             </a>

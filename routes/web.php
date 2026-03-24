@@ -1,12 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\PatientController;
-use App\Http\Controllers\Web\ReportController;
-use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Web\PredectionController;
+use App\Http\Controllers\Web\ReportController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Route;
 
 // ─────────────────────────────────────────
 // Guest Routes (مش محتاج يكون لوقن)
@@ -44,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/predictions')->group(function () {
         Route::get('/create/{id}', [PredectionController::class, 'create'])->name('predictions.create');
         Route::post('/store', [PredectionController::class, 'store'])->name('predictions.store');
+        Route::get('/result/{id}', [PredectionController::class, 'result'])->name('predictions.result');
     });
 
     // Reports
@@ -66,3 +69,51 @@ Route::middleware(['auth', 'role:admin'])->prefix('/doctors')->group(function ()
     Route::post('/{id}/update', [DoctorController::class, 'update'])->name('doctors.update');
     Route::delete('/{id}/delete', [DoctorController::class, 'destroy'])->name('doctors.delete');
 });
+
+// Forgot Password
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with('success', __($status))
+        : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
+
+// Reset Password
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function ($user, $password) {
+            $user->forceFill(['password' => bcrypt($password)])->save();
+        }
+    );
+
+    return $status === Password::PASSWORD_RESET
+        ? redirect()->route('login')->with('success', 'Password reset successfully')
+        : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.update');
+
+// Route::get('/test-mail', function () {
+//     \Mail::raw('Test email', function ($message) {
+//         $message->to('test@test.com')->subject('Test');
+//     });
+//     return 'Mail sent!';
+// });
