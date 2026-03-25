@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile',function(){
+        return view('auth.profile');
+    })->name('auth.profile');
 
     // Patients
     Route::prefix('/patients')->group(function () {
