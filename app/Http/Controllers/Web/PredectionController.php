@@ -83,4 +83,12 @@ class PredectionController extends Controller
     $prediction = Prediction::with(['patient', 'doctor'])->findOrFail($id);
     return view('predictions.result', compact('prediction'));
 }
+public function history($id){
+    $patient=Patient::findOrFail($id);
+    $predictions = Prediction::where('patient_id', $id)
+                    ->where('doctor_id', auth()->id())
+                    ->latest()
+                    ->get();
+    return view('predictions.history' ,compact('patient', 'predictions'));
+}
 }

@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/create/{id}', [PredectionController::class, 'create'])->name('predictions.create');
         Route::post('/store', [PredectionController::class, 'store'])->name('predictions.store');
         Route::get('/result/{id}', [PredectionController::class, 'result'])->name('predictions.result');
+        Route::get('/history/{id}',[PredectionController::class,'history'])->name('predictions.history');
     });
 
     // Reports

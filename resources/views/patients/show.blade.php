@@ -23,6 +23,11 @@
                 </div>
             </div>
             <div class="d-flex">
+                <a href="{{ route('predictions.history',$patient->id) }}"
+                    class="btn text-white font-weight-bold px-4 py-2 mr-2"
+                    style="background:#f97316; border-radius:10px;">
+                    <i class="fas fa-edit mr-2"></i> Patient History
+                </a>
                 <a href="{{ route('patients.edit', $patient->id) }}"
                     class="btn text-white font-weight-bold px-4 py-2 mr-2"
                     style="background:#f97316; border-radius:10px;">
