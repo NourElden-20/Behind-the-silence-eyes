@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'ai' => [
+    'url' => env('FASTAPI_URL'),
+],
+
 ];

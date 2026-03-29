@@ -2,97 +2,79 @@
 
 @section('main-content')
 
-    <div class="container-fluid">
+    <div class="container py-5">
 
         <div class="row justify-content-center">
 
             <!-- Profile Card -->
-            <div class="col-lg-4">
+            <div class="col-12">
                 <div class="card shadow mb-4">
                     <div class="card-body text-center">
+                        <!-- Avatar -->
+                        <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}" class="rounded-circle mb-3"
+                            width="80">
 
+                        <!-- Name -->
                         <h3 class="font-weight-bold">{{ auth()->user()->name }}</h3>
+
+                        <!-- Email -->
                         <p class="text-muted">{{ auth()->user()->email }}</p>
 
-                        <hr>
+                        <!-- Role -->
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-user-tag"></i>
+                            {{ auth()->user()->role }}
+                        </p>
 
-                        <div class="row text-center">
+                        <!-- Phone -->
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-phone"></i>
+                            {{ auth()->user()->phone ?? 'No phone number' }}
+                        </p>
 
-                            <div class="col">
-                                <h5>{{ auth()->user()->patients->count() }}</h5>
-                                <small>Patients</small>
-                            </div>
-
-                            <div class="col">
-                                <h5>{{ auth()->user()->predictions->count() }}</h5>
-                                <small>Predictions</small>
-                            </div>
-
-                        </div>
-
-                        <hr>
-
-                        <div class="mt-3">
-                    <!-- حطيت زرار الايديت ممكن نحتاجو عشان حسيتو كويس يس طبعا هنتطر نعملو صفحة -->
-                            <a href="#" class="btn btn-primary btn-sm">
-                                Edit Profile
-                            </a>
-
-                            <a href="{{ route('patients.create') }}" class="btn btn-success btn-sm m-1">
-                                + Add Patient
-                            </a>
-
-                            <a href="{{ route('patients.index') }}" class="btn btn-secondary btn-sm m-1">
-                                View Patients
-                            </a>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Predictions Table -->
-            <div class="col-lg-8">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h5 class="m-0 font-weight-bold text-primary">Recent Predictions</h5>
-                    </div>
-
-                    <div class="card-body table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Disease</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if(auth()->user()->predictions->count() > 0)
-
-                                    @foreach(auth()->user()->predictions()->latest()->take(5)->get() as $prediction)
-                                        <tr>
-                                            <td>{{ $prediction->patient->name }}</td>
-                                            <td>{{ $prediction->disease }}</td>
-                                            <td>{{ $prediction->created_at->format('d M Y') }}</td>
-                                        </tr>
-                                    @endforeach
-
-                                @else
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted">
-                                            No predictions yet
-                                        </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
 
         </div>
+        <!-- Update Profile Form -->
+        <div class="col-12 mt-3">
+            <div class="card shadow">
+                <div class="card-body">
 
-    </div>
+                    <h4 class="mb-4">Update Profile</h4>
+
+                    <form method="POST" action="#">
+                        @csrf
+
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" value="{{ auth()->user()->name }}">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ auth()->user()->email }}">
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone" class="form-control" value="{{ auth()->user()->phone }}">
+                        </div>
+
+
+                        <!-- Button       مش شغال طبعا -->
+                        <button type="submit" class="btn btn-primary">
+                            Update Profile
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
 @endsection
