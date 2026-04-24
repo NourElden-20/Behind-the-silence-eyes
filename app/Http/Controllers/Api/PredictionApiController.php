@@ -76,4 +76,15 @@ class PredictionApiController extends Controller
 
         return response()->json($predictions);
     }
+
+    public function result($id)
+    {
+        $prediction = Prediction::where('id', $id)
+                        ->where('doctor_id', auth()->id())
+                        ->with('patient')
+                        ->firstOrFail();
+
+        return response()->json($prediction);
+    }
+    
 }

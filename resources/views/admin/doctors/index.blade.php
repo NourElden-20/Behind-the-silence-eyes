@@ -17,10 +17,10 @@
 
     <div class="row justify-content-around">
 
-        @foreach ($doctors as $doctor )
+        @foreach ($doctors as $doctor)
             <div class="card border-dark col-lg-6 mt-2" style="max-width: 18rem;">
 
-                <div class="card-header">
+                <div class="card-header bg-dark text-white">
                     {{ $doctor->name }}
 
                     <div class="d-flex gap-2">
@@ -32,13 +32,13 @@
                 <div class="card-body text-dark">
 
                     <div class="d-flex justify-content-between">
-                        <h6>National ID:</h6>
-                        <h6>{{ $doctor->national_id }}</h6>
+                        <h6>Name:</h6>
+                        <h6>{{ $doctor->name }}</h6>
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <h6>Date of Birth:</h6>
-                        <h6>{{ $doctor->date_of_birth }}</h6>
+                        <h6>Code:</h6>
+                        <h6>{{ $doctor->doctor_code }}</h6>
                     </div>
 
                     <hr>

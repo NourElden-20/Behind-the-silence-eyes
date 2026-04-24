@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/auth/logout', [AuthApiController::class, 'logout'])->name('api.auth.logout');
     Route::get('/auth/me', [AuthApiController::class, 'me'])->name('api.auth.me');
+    Route::put('/auth/profile', [AuthApiController::class, 'update'])->name('api.auth.updateProfile');
 
     // Patients
     Route::get('/mobile/patients', [PatientApiController::class, 'index'])->name('api.patients.index');
@@ -26,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Predictions
     Route::post('/mobile/predictions/{type}', [PredictionApiController::class, 'store'])->name('api.predictions.store');
     Route::get('/mobile/predictions/history/{patient_id}', [PredictionApiController::class, 'history'])->name('api.predictions.history');
-
+    Route::get('/mobile/predictions/{id}', [PredictionApiController::class, 'result'])->name('api.predictions.result');
     // Reports
     Route::get('/mobile/reports/{id}', [ReportApiController::class, 'show'])->name('api.reports.show');
     Route::post('/mobile/reports/{id}/generate', [ReportApiController::class, 'generate'])->name('api.reports.generate');

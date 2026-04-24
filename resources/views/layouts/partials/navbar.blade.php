@@ -52,10 +52,21 @@
 
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+
+                <div class="img-profile rounded-circle d-flex align-items-center justify-content-center bg-primary text-white shadow-sm"
+                    style="width: 32px; height: 32px; font-size: 0.75rem; font-weight: bold;">
+                    @php
+                        $nameParts = explode(' ', auth()->user()->name);
+                        $initials =
+                            count($nameParts) >= 2
+                                ? substr($nameParts[0], 0, 1) . substr($nameParts[1], 0, 1)
+                                : substr(auth()->user()->name, 0, 2);
+                    @endphp
+                    {{ strtoupper($initials) }}
+                </div>
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

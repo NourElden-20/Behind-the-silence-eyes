@@ -94,4 +94,7 @@ class DashboardController extends Controller
             'hypertensionCount',
         ));
     }
+    // يحمع كل الداتا الى فى الداشبورد ويطلعها فى تقرير
+    
+
 }

@@ -43,52 +43,55 @@ class PredectionController extends Controller
             ]);
 
             $result = json_decode($response->getBody(), true);
-            $prediction=Prediction::create(
+            $prediction = Prediction::create(
                 [
-            'patient_id'   => $request->patient_id,
-            'doctor_id'    => auth()->id(),
-            'disease_type' => $request->disease_type,
-            'confidence'   => $result['confidence'],
-            'severity'     => $result['severity'] ?? $result['diagnosis'],
-            'image_path'   => $path,
-            'notes'        => $request->notes,
-            'status'       => 'completed',
+                    'patient_id' => $request->patient_id,
+                    'doctor_id' => auth()->id(),
+                    'disease_type' => $request->disease_type,
+                    'confidence' => $result['confidence'],
+                    'severity' => $result['severity'] ?? $result['diagnosis'],
+                    'image_path' => $path,
+                    'notes' => $request->notes,
+                    'status' => 'completed',
                 ]
             );
 
+        } catch (\Exception $e) {
+
+            // 5. لو FastAPI وقع
+            $prediction = Prediction::create([
+                'patient_id' => $request->patient_id,
+                'doctor_id' => auth()->id(),
+                'disease_type' => $request->disease_type,
+                'confidence' => 0,
+                'severity' => null,
+                'image_path' => $path,
+                'notes' => $request->notes,
+                'status' => 'failed',
+            ]);
+
+            return redirect()->back()->with('error', 'AI service is unavailable');
         }
-        catch (\Exception $e) {
 
-        // 5. لو FastAPI وقع
-        $prediction = Prediction::create([
-            'patient_id'   => $request->patient_id,
-            'doctor_id'    => auth()->id(),
-            'disease_type' => $request->disease_type,
-            'confidence'   => 0,
-            'severity'     => null,
-            'image_path'   => $path,
-            'notes'        => $request->notes,
-            'status'       => 'failed',
-        ]);
-
-        return redirect()->back()->with('error', 'AI service is unavailable');
+        return redirect()->route('predictions.result', $prediction->id)
+            ->with('success', 'Diagnosis completed');
     }
-    return redirect()->route('predictions.result', $prediction->id)
-        ->with('success', 'Diagnosis completed');
-    }
-
 
     public function result($id)
-{
-    $prediction = Prediction::with(['patient', 'doctor'])->findOrFail($id);
-    return view('predictions.result', compact('prediction'));
-}
-public function history($id){
-    $patient=Patient::findOrFail($id);
-    $predictions = Prediction::where('patient_id', $id)
-                    ->where('doctor_id', auth()->id())
-                    ->latest()
-                    ->get();
-    return view('predictions.history' ,compact('patient', 'predictions'));
-}
+    {
+        $prediction = Prediction::with(['patient', 'doctor'])->findOrFail($id);
+
+        return view('predictions.result', compact('prediction'));
+    }
+
+    public function history($id)
+    {
+        $patient = Patient::findOrFail($id);
+        $predictions = Prediction::where('patient_id', $id)
+            ->where('doctor_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view('predictions.history', compact('patient', 'predictions'));
+    }
 }

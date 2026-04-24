@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use App\Models\Prediction;
 use App\Models\Report;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -41,4 +42,17 @@ class ReportController extends Controller
         return view('reports.show', compact('report'));
 
     }
+
+    public function generateReportDashboard()
+    {
+        $totalPrediction = Prediction::count();
+        $todayPrediction = Prediction::whereDate('created_at', now()->toDateString())->count();
+        $diabetesCount = Prediction::where('disease_type', 'diabetes')->count();
+        $hypertensionCount = Prediction::where('disease_type', 'hypertension')->count();
+        $anemiaCount = Prediction::where('disease_type', 'anemia')->count();
+
+        return view('reports.dashboard_report', compact('totalPrediction', 'todayPrediction', 'diabetesCount', 'hypertensionCount','anemiaCount'));
+
+    }
+
 }

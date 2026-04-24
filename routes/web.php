@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\PatientController;
 use App\Http\Controllers\Web\PredectionController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -30,8 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile',function(){
-        return view('auth.profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('auth.profile.update');
+    Route::get('/profile', function () {
+        $doctor = auth()->user();
+
+        return view('auth.profile', compact('doctor'));
     })->name('auth.profile');
 
     // Patients
@@ -50,13 +54,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/create/{id}', [PredectionController::class, 'create'])->name('predictions.create');
         Route::post('/store', [PredectionController::class, 'store'])->name('predictions.store');
         Route::get('/result/{id}', [PredectionController::class, 'result'])->name('predictions.result');
-        Route::get('/history/{id}',[PredectionController::class,'history'])->name('predictions.history');
+        Route::get('/history/{id}', [PredectionController::class, 'history'])->name('predictions.history');
     });
 
     // Reports
     Route::prefix('/reports')->group(function () {
         Route::get('/{id}', [ReportController::class, 'show'])->name('reports.show');
         Route::post('/{id}/generate', [ReportController::class, 'generate'])->name('reports.generate');
+        Route::get('/dashboard/report', [ReportController::class, 'generateReportDashboard'])->name('reports.dashboard');
     });
 
 });
