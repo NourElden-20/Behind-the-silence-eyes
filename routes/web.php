@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Api\PatientAuthApiController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\PatientAuthController;
 use App\Http\Controllers\Web\PatientController;
 use App\Http\Controllers\Web\PredectionController;
 use App\Http\Controllers\Web\ProfileController;
@@ -37,6 +39,15 @@ Route::middleware('auth')->group(function () {
 
         return view('auth.profile', compact('doctor'));
     })->name('auth.profile');
+
+    // Patient Aut
+Route::get('/patient-login', [PatientAuthController::class, 'showLogin'])->name('patient.login');
+Route::post('/patient-login', [PatientAuthController::class, 'login']);
+
+Route::middleware('auth.patient')->group(function () {
+    Route::get('/patient/dashboard', [PatientAuthController::class, 'dashboard'])->name('patient.dashboard');
+    Route::post('/patient/logout', [PatientAuthController::class, 'logout'])->name('patient.logout');
+});
 
     // Patients
     Route::prefix('/patients')->group(function () {

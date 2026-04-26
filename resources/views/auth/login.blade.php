@@ -19,7 +19,7 @@
             style="max-width:540px; border-radius:20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 6px 20px rgba(26,86,219,0.1);">
             <h2 class="fw-bold mb-4" style="color:#0f172a;">Doctor Login</h2>
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="alert alert-danger rounded-3">{{ session('error') }}</div>
             @endif
 
@@ -66,15 +66,20 @@
                         <input class="form-check-input" type="checkbox" name="remember" id="remember">
                         <label class="form-check-label text-secondary" for="remember">Remember me</label>
                     </div>
-                    <a href="{{ route('password.request') }}" class="text-decoration-none fw-semibold" style="color:#1a56db;">Forgot Password</a>
+                    <a href="{{ route('password.request') }}" class="text-decoration-none fw-semibold"
+                        style="color:#1a56db;">Forgot Password</a>
                 </div>
+
 
                 {{-- Submit --}}
 
                 <button type="submit" class="w-100 py-2 fw-bold fs-5 border-0 text-white mt-2"
-                    style="background:#1a56db; border-radius:12px;">Login</button>
+                    style="background:#1a56db; border-radius:12px;">
+                    Login
+                </button>
 
             </form>
+            
         </div>
 
         <footer class="text-center mt-4 pb-3" style="color:#475569;">

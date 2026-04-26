@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthApiController;
 use App\Http\Controllers\Api\DoctorApiController;
 use App\Http\Controllers\Api\PatientApiController;
+use App\Http\Controllers\Api\PatientAuthApiController;
 use App\Http\Controllers\Api\PredictionApiController;
 use App\Http\Controllers\Api\ReportApiController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthApiController::class, 'logout'])->name('api.auth.logout');
     Route::get('/auth/me', [AuthApiController::class, 'me'])->name('api.auth.me');
     Route::put('/auth/profile', [AuthApiController::class, 'update'])->name('api.auth.updateProfile');
+
+    // Patient Auth
+    Route::post('/patient/login', [PatientAuthApiController::class, 'login']);
+
+    Route::middleware('auth.patient.api')->group(function () {
+        Route::get('/patient/profile', [PatientAuthApiController::class, 'profile']);
+        Route::get('/patient/diagnoses', [PatientAuthApiController::class, 'diagnoses']);
+        Route::get('/patient/reports', [PatientAuthApiController::class, 'reports']);
+        Route::post('/patient/logout', [PatientAuthApiController::class, 'logout']);
+    });
 
     // Patients
     Route::get('/mobile/patients', [PatientApiController::class, 'index'])->name('api.patients.index');
