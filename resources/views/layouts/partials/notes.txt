@@ -1,0 +1,5 @@
+start diagnoisis 
+add new patient 
+view all 
+view report 
+patient at the side bar
