@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\DoctorController;
-use App\Http\Controllers\Api\PatientAuthApiController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\PatientAuthController;
@@ -13,43 +12,61 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
-// ─────────────────────────────────────────
-// Guest Routes (مش محتاج يكون لوقن)
-// ─────────────────────────────────────────
+/*
+|--------------------------------------------------------------------------
+| Public & Guest Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('auth.login');
 });
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/patient-login', [PatientAuthController::class, 'showLogin'])->name('patient.login');
+    Route::post('/patient-login', [PatientAuthController::class, 'login']);
 });
 
-// ─────────────────────────────────────────
-// Auth Routes (لازم يكون لوقن)
-// ─────────────────────────────────────────
-Route::middleware('auth')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Shared Routes (الراوتات المشتركة بين الدكتور والمريض)
+|--------------------------------------------------------------------------
+*/
+// بنستخدم auth:web,patient عشان نسمح للجارد بتاع الدكتور وبتاع المريض يدخلوا
+Route::middleware(['auth:web,patient'])->group(function () {
+    Route::get('/reports/{id}', [ReportController::class, 'show'])->name('reports.show');
+});
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('auth.profile.update');
-    Route::get('/profile', function () {
-        $doctor = auth()->user();
-
-        return view('auth.profile', compact('doctor'));
-    })->name('auth.profile');
-
-    // Patient Aut
-Route::get('/patient-login', [PatientAuthController::class, 'showLogin'])->name('patient.login');
-Route::post('/patient-login', [PatientAuthController::class, 'login']);
-
-Route::middleware('auth.patient')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Patient Authenticated Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:patient'])->group(function () {
     Route::get('/patient/dashboard', [PatientAuthController::class, 'dashboard'])->name('patient.dashboard');
     Route::post('/patient/logout', [PatientAuthController::class, 'logout'])->name('patient.logout');
 });
 
-    // Patients
+/*
+|--------------------------------------------------------------------------
+| Doctor/Admin Authenticated Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:web')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/profile', function () {
+        $doctor = auth()->user();
+        return view('auth.profile', compact('doctor'));
+    })->name('auth.profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('auth.profile.update');
+
     Route::prefix('/patients')->group(function () {
         Route::get('/', [PatientController::class, 'index'])->name('patients.index');
         Route::get('/create', [PatientController::class, 'create'])->name('patients.create');
@@ -60,7 +77,6 @@ Route::middleware('auth.patient')->group(function () {
         Route::delete('/{id}/delete', [PatientController::class, 'destroy'])->name('patients.delete');
     });
 
-    // Predictions
     Route::prefix('/predictions')->group(function () {
         Route::get('/create/{id}', [PredectionController::class, 'create'])->name('predictions.create');
         Route::post('/store', [PredectionController::class, 'store'])->name('predictions.store');
@@ -68,19 +84,20 @@ Route::middleware('auth.patient')->group(function () {
         Route::get('/history/{id}', [PredectionController::class, 'history'])->name('predictions.history');
     });
 
-    // Reports
     Route::prefix('/reports')->group(function () {
-        Route::get('/{id}', [ReportController::class, 'show'])->name('reports.show');
+        // شيلنا راوت show من هنا لأنه بقى في المشترك فوق
         Route::post('/{id}/generate', [ReportController::class, 'generate'])->name('reports.generate');
         Route::get('/dashboard/report', [ReportController::class, 'generateReportDashboard'])->name('reports.dashboard');
     });
 
 });
 
-// ─────────────────────────────────────────
-// Admin Routes (لازم يكون أدمن)
-// ─────────────────────────────────────────
-Route::middleware(['auth', 'role:admin'])->prefix('/doctors')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Admin Specific Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:web', 'role:admin'])->prefix('/doctors')->group(function () {
     Route::get('/', [DoctorController::class, 'index'])->name('doctors.index');
     Route::get('/create', [DoctorController::class, 'create'])->name('doctors.create');
     Route::post('/store', [DoctorController::class, 'store'])->name('doctors.store');
@@ -90,50 +107,31 @@ Route::middleware(['auth', 'role:admin'])->prefix('/doctors')->group(function ()
     Route::delete('/{id}/delete', [DoctorController::class, 'destroy'])->name('doctors.delete');
 });
 
-// Forgot Password
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->middleware('guest')->name('password.request');
+/*
+|--------------------------------------------------------------------------
+| Password Recovery Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', function () {
+        return view('auth.forgot-password');
+    })->name('password.request');
 
-Route::post('/forgot-password', function (Request $request) {
-    $request->validate(['email' => 'required|email']);
+    Route::post('/forgot-password', function (Request $request) {
+        $request->validate(['email' => 'required|email']);
+        $status = Password::sendResetLink($request->only('email'));
+        return $status === Password::RESET_LINK_SENT ? back()->with('success', __($status)) : back()->withErrors(['email' => __($status)]);
+    })->name('password.email');
 
-    $status = Password::sendResetLink(
-        $request->only('email')
-    );
+    Route::get('/reset-password/{token}', function (string $token) {
+        return view('auth.reset-password', ['token' => $token]);
+    })->name('password.reset');
 
-    return $status === Password::RESET_LINK_SENT
-        ? back()->with('success', __($status))
-        : back()->withErrors(['email' => __($status)]);
-})->middleware('guest')->name('password.email');
-
-// Reset Password
-Route::get('/reset-password/{token}', function (string $token) {
-    return view('auth.reset-password', ['token' => $token]);
-})->middleware('guest')->name('password.reset');
-
-Route::post('/reset-password', function (Request $request) {
-    $request->validate([
-        'token' => 'required',
-        'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
-    $status = Password::reset(
-        $request->only('email', 'password', 'password_confirmation', 'token'),
-        function ($user, $password) {
+    Route::post('/reset-password', function (Request $request) {
+        $request->validate(['token' => 'required', 'email' => 'required|email', 'password' => 'required|min:8|confirmed']);
+        $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), function ($user, $password) {
             $user->forceFill(['password' => bcrypt($password)])->save();
-        }
-    );
-
-    return $status === Password::PASSWORD_RESET
-        ? redirect()->route('login')->with('success', 'Password reset successfully')
-        : back()->withErrors(['email' => __($status)]);
-})->middleware('guest')->name('password.update');
-
-// Route::get('/test-mail', function () {
-//     \Mail::raw('Test email', function ($message) {
-//         $message->to('test@test.com')->subject('Test');
-//     });
-//     return 'Mail sent!';
-// });
+        });
+        return $status === Password::PASSWORD_RESET ? redirect()->route('login')->with('success', 'Password reset successfully') : back()->withErrors(['email' => __($status)]);
+    })->name('password.update');
+});

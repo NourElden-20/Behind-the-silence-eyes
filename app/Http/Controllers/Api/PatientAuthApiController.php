@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\Prediction;
 use App\Models\Report;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PatientAuthApiController extends Controller
 {
@@ -22,8 +23,12 @@ class PatientAuthApiController extends Controller
             return response()->json(['message' => 'National ID not found'], 404);
         }
 
-        $token = bin2hex(random_bytes(32));
-        $patient->update(['patient_token' => $token]);
+        // --- التعديل الجوهري: استخدام Sanctum بدلاً من التوكن اليدوي ---
+        // بنمسح أي توكنات قديمة للمريض ده عشان ميبقاش فاتح من كذا مكان (اختياري)
+        $patient->tokens()->delete();
+
+        // إنشاء توكن رسمي من لارافيل
+        $token = $patient->createToken('patient_api_token')->plainTextToken;
 
         return response()->json([
             'token'   => $token,
@@ -33,18 +38,23 @@ class PatientAuthApiController extends Controller
                 'age'         => $patient->age,
                 'gender'      => $patient->gender,
                 'national_id' => $patient->national_id,
+                'phone'       => $patient->phone,
             ]
         ]);
     }
 
     public function profile(Request $request)
     {
-        return response()->json($request->auth_patient);
+        // باستخدام Sanctum، المريض الحالي بيكون موجود في auth()->user()
+        return response()->json(auth()->user());
     }
 
     public function diagnoses(Request $request)
     {
-        $predictions = Prediction::where('patient_id', $request->auth_patient->id)
+        // بنجيب المريض من التوكن الحالي
+        $patient = auth()->user();
+
+        $predictions = Prediction::where('patient_id', $patient->id)
                         ->latest()
                         ->get();
 
@@ -53,16 +63,20 @@ class PatientAuthApiController extends Controller
 
     public function reports(Request $request)
     {
-        $reports = Report::whereHas('prediction', function ($q) use ($request) {
-            $q->where('patient_id', $request->auth_patient->id);
-        })->with('prediction')->get();
+        $patient = auth()->user();
+
+        $reports = Report::whereHas('prediction', function ($q) use ($patient) {
+            $q->where('patient_id', $patient->id);
+        })->with('prediction')->latest()->get();
 
         return response()->json($reports);
     }
 
     public function logout(Request $request)
     {
-        $request->auth_patient->update(['patient_token' => null]);
+        // حذف التوكن الحالي اللي المريض داخل بيه
+        auth()->user()->currentAccessToken()->delete();
+
         return response()->json(['message' => 'Logged out successfully']);
     }
 }
