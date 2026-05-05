@@ -8,7 +8,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Patient extends Authenticatable 
 {
-    use HasApiTokens,    Notifiable;
+    use HasApiTokens; 
+     use  Notifiable;
 
     protected $fillable = [
         'doctor_id', 'name', 'age', 'gender', 

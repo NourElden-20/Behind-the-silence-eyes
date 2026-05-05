@@ -1,5 +1,5 @@
 @extends('layouts.auth')
-
+ 
 @section('content')
     {{-- إزالة Fixed تماماً واستخدام Flex بمرونة للسماح بالسكرول --}}
     <div class="min-vh-100 w-100 d-flex flex-column align-items-center py-5"
@@ -19,7 +19,7 @@
         </div>
 
         {{-- Main Card (Doctor Only) --}}
-        <div class="card border-0 p-4 p-md-5 w-100 mb-4"
+        <div class="card border-0 p-4 p-md-5 w-100 mb-4 login-card"
             style="max-width:500px; border-radius:20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
             
             <h2 class="fw-bold mb-4 text-center" style="color:#0f172a;">Doctor Login</h2>

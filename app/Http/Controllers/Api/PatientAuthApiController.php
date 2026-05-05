@@ -7,31 +7,33 @@ use App\Models\Patient;
 use App\Models\Prediction;
 use App\Models\Report;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class PatientAuthApiController extends Controller
 {
     public function login(Request $request)
     {
+        // 1. التحقق من البيانات (Validation)
         $request->validate([
-            'national_id' => 'required'
+            'national_id' => 'required|exists:patients,national_id'
+        ], [
+            'national_id.exists' => 'رقم الهوية هذا غير مسجل لدينا.'
         ]);
 
         $patient = Patient::where('national_id', $request->national_id)->first();
 
-        if (!$patient) {
-            return response()->json(['message' => 'National ID not found'], 404);
-        }
-
-        // --- التعديل الجوهري: استخدام Sanctum بدلاً من التوكن اليدوي ---
-        // بنمسح أي توكنات قديمة للمريض ده عشان ميبقاش فاتح من كذا مكان (اختياري)
+        // 2. إدارة التوكن (Sanctum)
+        // حذف التوكنات القديمة لضمان تسجيل دخول واحد فقط (اختياري)
         $patient->tokens()->delete();
 
-        // إنشاء توكن رسمي من لارافيل
+        // إنشاء التوكن الجديد
         $token = $patient->createToken('patient_api_token')->plainTextToken;
 
+        // 3. الرد
         return response()->json([
-            'token'   => $token,
+            'status' => true,
+            'message' => 'sign in successfully',
+            'token' => $token,
             'patient' => [
                 'id'          => $patient->id,
                 'name'        => $patient->name,
@@ -40,43 +42,52 @@ class PatientAuthApiController extends Controller
                 'national_id' => $patient->national_id,
                 'phone'       => $patient->phone,
             ]
+        ], 200);
+    }
+
+    public function profile()
+    {
+        // إرجاع بيانات المريض المسجل حالياً
+        return response()->json([
+            'status' => true,
+            'data'   => auth()->user()
         ]);
     }
 
-    public function profile(Request $request)
+    public function diagnoses()
     {
-        // باستخدام Sanctum، المريض الحالي بيكون موجود في auth()->user()
-        return response()->json(auth()->user());
+        // استخدام العلاقة المعرفة في الموديل (أسرع وأنظف)
+        $predictions = auth()->user()->predictions()->latest()->get();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $predictions
+        ]);
     }
 
-    public function diagnoses(Request $request)
+    public function reports()
     {
-        // بنجيب المريض من التوكن الحالي
-        $patient = auth()->user();
+        $patientId = auth()->id();
 
-        $predictions = Prediction::where('patient_id', $patient->id)
-                        ->latest()
-                        ->get();
-
-        return response()->json($predictions);
-    }
-
-    public function reports(Request $request)
-    {
-        $patient = auth()->user();
-
-        $reports = Report::whereHas('prediction', function ($q) use ($patient) {
-            $q->where('patient_id', $patient->id);
+        // جلب التقارير المرتبطة بتوقعات هذا المريض فقط
+        $reports = Report::whereHas('prediction', function ($query) use ($patientId) {
+            $query->where('patient_id', $patientId);
         })->with('prediction')->latest()->get();
 
-        return response()->json($reports);
+        return response()->json([
+            'status' => true,
+            'data'   => $reports
+        ]);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        // حذف التوكن الحالي اللي المريض داخل بيه
+        // حذف التوكن الحالي المستخدم في الطلب
         auth()->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out successfully']);
+        return response()->json([
+            'status'  => true,
+            'message' => 'sign out successfully'
+        ]);
     }
 }
