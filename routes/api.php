@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PatientApiController;
 use App\Http\Controllers\Api\PatientAuthApiController;
 use App\Http\Controllers\Api\PredictionApiController;
 use App\Http\Controllers\Api\ReportApiController;
+use App\Http\Controllers\Api\ProfileApiController; // السطر الجديد للكنترولر
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,14 +27,12 @@ Route::post('/patient/login', [PatientAuthApiController::class, 'login'])->name(
 |--------------------------------------------------------------------------
 */
 
-// ملحوظة: Sanctum هيعرف لوحده التوكن ده بتاع مريض ولا دكتور بناءً على الـ Model المرتبط بالتوكن
 Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
     | Shared Routes (Shared between Patients & Doctors)
     |--------------------------------------------------------------------------
-    | راوتات عرض التقارير والنتائج لازم تكون متاحة للطرفين
     */
     Route::get('/mobile/reports/{id}', [ReportApiController::class, 'show'])->name('api.reports.show');
     Route::get('/mobile/predictions/{id}', [PredictionApiController::class, 'result'])->name('api.predictions.result');
@@ -43,9 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     | Patient ONLY Routes
     |--------------------------------------------------------------------------
-    | هذه المسارات لا يفتحها إلا المريض (باستخدام التوكن الخاص به)
     */
-    // تأكد أن الميدل وير auth.patient.api بيفحص الـ Guard الخاص بالمريض
     Route::middleware('auth.patient.api')->group(function () {
         Route::get('/patient/profile', [PatientAuthApiController::class, 'profile']);
         Route::get('/patient/diagnoses', [PatientAuthApiController::class, 'diagnoses']);
@@ -57,14 +54,15 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     | Doctor ONLY Operations
     |--------------------------------------------------------------------------
-    | المسارات دي خاصة بالدكاترة بس (CRUD المرضى، التوقعات، إلخ)
     */
     Route::middleware('role:doctor,admin')->group(function () {
         
         // Auth Actions for Doctors
         Route::post('/auth/logout', [AuthApiController::class, 'logout'])->name('api.auth.logout');
         Route::get('/auth/me', [AuthApiController::class, 'me'])->name('api.auth.me');
-        Route::put('/auth/profile', [AuthApiController::class, 'update'])->name('api.auth.updateProfile');
+        
+        // السطر الجديد لتحديث البروفايل
+        Route::put('/auth/profile/update', [ProfileApiController::class, 'update'])->name('api.auth.updateProfile');
 
         // Manage Patients
         Route::get('/mobile/patients', [PatientApiController::class, 'index'])->name('api.patients.index');
@@ -93,4 +91,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/mobile/doctors/{id}', [DoctorApiController::class, 'destroy'])->name('api.doctors.destroy');
     });
 
-});
+}); 
