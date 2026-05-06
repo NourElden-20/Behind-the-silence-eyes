@@ -59,13 +59,13 @@
     <li class="nav-item">
         <form action="{{ route('logout') }}" method="POST">
             @csrf
-            <button type="submit" class="nav-link btn btn-link w-100 text-left" style="color:rgba(255,255,255,0.8);">
+            <button type="submit" class="nav-link btn btn-link w-100 " style="color:rgba(255,255,255,0.8);">
                 <i class="fas fa-fw fa-sign-out-alt"></i>
                 <span>Logout</span>
             </button>
         </form>
     </li>
-    
+
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline mt-3">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
