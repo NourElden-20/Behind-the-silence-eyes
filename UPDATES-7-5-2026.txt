@@ -1,0 +1,27 @@
+Summary of All Changes Made:
+
+---
+
+**1. `delete-confirm.js`** `public/js/`
+- Replaced browser `confirm()` with a **Bootstrap Modal** for delete confirmation
+- Modal is created and injected into the page via JS
+- Handles: open on delete click, confirm submits form, cancel/outside click closes modal
+
+---
+
+**2. `patients-index.blade.php`** `resources/views/patients/`
+- Changed `@push('scripts')` → `@section('scripts')` to properly load the JS file
+- Added `type="button"` to the delete button to prevent instant form submission
+- Added `btn-delete-patient` class to the delete button as the JS hook
+
+---
+
+**3. `app.blade.php`** `resources/views/layouts/`
+- Added `@yield('scripts')` before `</body>` so page-specific scripts can be loaded
+
+---
+
+**4. `navbar.blade.php`** `resources/views/layouts/partials/`
+- Replaced the search `<form>` with a `<div>` containing **"Behind The Silence Eyes"** brand text and `fa-eye` icon
+- Used `text-primary` instead of `text-white` since navbar background is `bg-white`
+- Fixed extra `-->` typo at the end of `</ul>`

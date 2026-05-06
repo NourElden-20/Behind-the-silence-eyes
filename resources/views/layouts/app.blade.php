@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-@if (auth()->user()->isAdmin())
+    @if (auth()->user()->isAdmin())
     <title> @yield('title')Admin-Dashboard</title>
     @else
     <title> @yield('title')Doctor-Dashboard</title>
-@endif
+    @endif
 
-    
+
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -33,9 +33,9 @@
     <div id="wrapper">
 
         @if (auth()->user()->isAdmin())
-            @include('layouts.partials.sidebar-admin')
+        @include('layouts.partials.sidebar-admin')
         @else
-            @include('layouts.partials.sidebar-doctor')
+        @include('layouts.partials.sidebar-doctor')
         @endif
 
         <!-- Content Wrapper -->
@@ -50,7 +50,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    
+
                     <div class="container-fluid">
                         @yield('main-content')
                     </div>
@@ -108,6 +108,9 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/demo/chart-bar-demo.js') }}"></script>
     <script src="{{ asset('js/demo/chart-pie-demo.js') }}"></script>
+
+    {{-- Page specific scripts --}}
+    @yield('scripts')
 
 </body>
 
