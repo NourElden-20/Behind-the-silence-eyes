@@ -55,7 +55,6 @@
                         <form action="{{ route('doctors.delete', $doctor->id) }}" method="post">
                             @csrf
                             @method('DELETE')
-
                             <button class="btn btn-outline-danger">
                                 <i class="fas fa-fw fa-trash"></i>
                             </button>
