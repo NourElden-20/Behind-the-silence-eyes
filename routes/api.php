@@ -15,11 +15,22 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+use App\Http\Controllers\Api\ForgotPasswordController;
+
+
 // Doctor/Admin Login
 Route::post('/auth/login', [AuthApiController::class, 'login'])->name('api.auth.login');
 
 // Patient Login (National ID)
 Route::post('/patient/login', [PatientAuthApiController::class, 'login'])->name('api.patient.login');
+
+// Forgot Password
+Route::post('/auth/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])
+    ->name('api.auth.forgot-password');
+
+// Reset Password
+Route::post('/auth/reset-password', [ForgotPasswordController::class, 'resetPassword'])
+    ->name('api.auth.reset-password');
 
 /*
 |--------------------------------------------------------------------------
